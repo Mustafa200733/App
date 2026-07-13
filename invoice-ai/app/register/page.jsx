@@ -1,29 +1,58 @@
+"use client";
+
+import { useState } from "react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
+
 export default function Register() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  async function register() {
+    setError("");
+
+    if (!isSupabaseConfigured || !supabase) {
+      setError("Supabase is nog niet goed geconfigureerd.");
+      return;
+    }
+
+    const { error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError) {
+      setError(authError.message);
+    } else {
+      alert("Account gemaakt");
+      router.push("/login");
+    }
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h1 className="text-2xl font-bold mb-4">Register</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-xl shadow w-96">
+        <h1 className="text-3xl font-bold mb-6">Registreren</h1>
 
         <input
-          type="text"
-          placeholder="Name"
-          className="w-full p-2 border rounded mb-3"
-        />
-
-        <input
-          type="email"
+          className="border p-3 w-full mb-4 rounded"
           placeholder="Email"
-          className="w-full p-2 border rounded mb-3"
+          onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
+          className="border p-3 w-full mb-4 rounded"
           type="password"
           placeholder="Password"
-          className="w-full p-2 border rounded mb-3"
+          onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-black text-white p-2 rounded">
-          Create account
+        {error ? <p className="mb-4 text-sm text-red-600">{error}</p> : null}
+
+        <button onClick={register} className="bg-black text-white w-full p-3 rounded">
+          Account maken
         </button>
       </div>
     </div>

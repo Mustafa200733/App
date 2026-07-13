@@ -1,18 +1,28 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-      <h1 className="text-4xl font-bold">Invoice AI</h1>
-      <p className="mt-2 text-gray-600">
-        Maak facturen en offertes in seconden
+    <main className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <h1 className="text-5xl font-bold">Invoice AI</h1>
+
+      <p className="mt-4 text-gray-600">
+        Maak professionele facturen met AI.
       </p>
 
-      <div className="mt-6 flex gap-4">
-        <a href="/login" className="px-4 py-2 bg-black text-white rounded">
+      <div className="mt-8 flex gap-4">
+        <Link
+          href="/login"
+          className="bg-black text-white px-6 py-3 rounded-lg"
+        >
           Login
-        </a>
-        <a href="/register" className="px-4 py-2 border rounded">
+        </Link>
+
+        <Link
+          href="/register"
+          className="border px-6 py-3 rounded-lg"
+        >
           Register
-        </a>
+        </Link>
       </div>
     </main>
   );

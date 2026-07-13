@@ -1,20 +1,47 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Navbar";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+
 export default function DashboardLayout({ children }) {
+  const router = useRouter();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    async function checkSession() {
+      if (!isSupabaseConfigured || !supabase) {
+        router.replace('/login');
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.replace('/login');
+        return;
+      }
+
+      setReady(true);
+    }
+
+    checkSession();
+  }, [router]);
+
+  if (!ready) {
+    return <div className="min-h-screen flex items-center justify-center">Bezig met laden…</div>;
+  }
+
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
-      <aside className="w-64 bg-black text-white p-4">
-        <h2 className="text-xl font-bold mb-6">Invoice AI</h2>
+    <div className="flex">
+      <Sidebar />
 
-        <nav className="flex flex-col gap-3">
-          <a href="/dashboard">Dashboard</a>
-          <a href="/dashboard/customers">Klanten</a>
-          <a href="/dashboard/invoices">Facturen</a>
-          <a href="/dashboard/settings">Instellingen</a>
-        </nav>
-      </aside>
+      <div className="flex-1 bg-gray-100 min-h-screen">
+        <Navbar />
 
-      {/* Content */}
-      <main className="flex-1 bg-gray-100 p-6">{children}</main>
+        <main className="p-8">{children}</main>
+      </div>
     </div>
   );
 }
