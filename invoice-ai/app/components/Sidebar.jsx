@@ -21,6 +21,12 @@ export default function Sidebar() {
         <Link className="block hover:text-blue-400" href="/dashboard/settings">
           Instellingen
         </Link>
+        <Link 
+className="block hover:text-blue-400"
+href="/dashboard/ai"
+>
+AI Assistant
+</Link>
       </nav>
     </aside>
   );
