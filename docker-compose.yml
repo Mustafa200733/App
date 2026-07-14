@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  invoice-ai:
+    build:
+      context: .
+      dockerfile: invoice-ai/Dockerfile
+    image: invoice-ai:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      # Optional env vars; set in your host or an env file
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LOCAL_LLM_URL=${LOCAL_LLM_URL}
+    restart: unless-stopped
+    # If you want to mount a local .env.local for quick testing on the host
+    # volumes:
+    #   - ./invoice-ai/.env.local:/app/invoice-ai/.env.local:ro
+
+# Example: add an LLM service (uncomment and configure) if you host a model container
+# llm:
+#   image: your-llm-image:latest
+#   ports:
+#     - "7860:7860"
+#   environment:
+#     - MODEL_PATH=/models/gpt4all-small.bin
+#   volumes:
+#     - ./models:/models
+#   restart: unless-stopped
